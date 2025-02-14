@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+    <!-- Inclusion de Bootstrap 5 pour le design amélioré -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRAB9EO6R4R0lF7z2LmjZp3nQ2doReiD3CGJwLgG5F4n8pPsf6bPQGV1Qd" crossorigin="anonymous">
+
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Rapport Global de l'Entreprise</h1>
+        
+        <!-- Affichage de la période filtrée -->
+        {% if request.GET.start_date and request.GET.end_date %}
+            <p class="text-center">Période : {{ request.GET.start_date }} - {{ request.GET.end_date }}</p>
+        {% else %}
+            <p class="text-center">Aucune période sélectionnée. Affichage global des données.</p>
+        {% endif %}
+
+        <!-- Section des statistiques globales -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Revenus Totaux</h5>
+                        <p class="card-text">{{ global_stats.total_revenues }} Ar</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Dépenses Totales</h5>
+                        <p class="card-text">{{ global_stats.total_expenses }} Ar</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Bénéfice Global</h5>
+                        <p class="card-text">{{ global_stats.global_benefit }} Ar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Performance par Camion -->
+        <h2 class="mt-5">Performance par Camion</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Camion</th>
+                    <th>Revenus</th>
+                    <th>Dépenses</th>
+                    <th>Performance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in camion_stats %}
+                    <tr>
+                        <td>{{ item.camion }}</td>
+                        <td>{{ item.revenues }} Ar</td>
+                        <td>{{ item.expenses }} Ar</td>
+                        <td>{{ item.performance }} Ar</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Graphiques - Visualisation des données -->
+        <h2 class="mt-5">Graphiques de Performance</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Répartition des Revenus et Dépenses par Camion</h5>
+                <canvas id="revenusDepensesChart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h5>Performance Globale</h5>
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Sélection des dates pour le rapport -->
+        <h2 class="mt-5">Filtrer par Période</h2>
+        <form method="GET" action="{% url 'camions:rapport_camion' %}">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="start_date" class="form-label">Date de début</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request.GET.start_date }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="end_date" class="form-label">Date de fin</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request.GET.end_date }}">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary mt-4">Appliquer le filtre</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- Inclusion de Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Graphique des Revenus vs Dépenses par Camion
+        var ctx1 = document.getElementById('revenusDepensesChart').getContext('2d');
+        var revenusDepensesChart = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: [{% for item in camion_stats %}'{{ item.camion }}',{% endfor %}],
+                datasets: [{
+                    label: 'Revenus',
+                    data: [{% for item in camion_stats %}{{ item.revenues }},{% endfor %}],
+                    backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Dépenses',
+                    data: [{% for item in camion_stats %}{{ item.expenses }},{% endfor %}],
+                    backgroundColor: 'rgba(255, 193, 7, 0.5)',
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' Ar';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graphique de la Performance Globale
+        var ctx2 = document.getElementById('performanceChart').getContext('2d');
+        var performanceChart = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: ['Revenus', 'Dépenses', 'Bénéfice'],
+                datasets: [{
+                    label: 'Performance Globale',
+                    data: [{{ global_stats.total_revenues }}, {{ global_stats.total_expenses }}, {{ global_stats.global_benefit }}],
+                    backgroundColor: ['rgba(0, 123, 255, 0.7)', 'rgba(255, 193, 7, 0.7)', 'rgba(40, 167, 69, 0.7)'],
+                    borderColor: ['rgba(0, 123, 255, 1)', 'rgba(255, 193, 7, 1)', 'rgba(40, 167, 69, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' Ar';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+{% endblock %}

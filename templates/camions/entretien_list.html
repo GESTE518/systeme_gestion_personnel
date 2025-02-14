@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center text-primary mb-4">Liste des Entretiens</h1>
+
+    <!-- Bouton Ajouter un entretien -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'camions:entretien_create' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Ajouter un Entretien
+        </a>
+    </div>
+
+    <!-- Liste des entretiens -->
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Camion</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Coût</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entretien in entretiens %}
+            <tr>
+                <td>{{ entretien.camion.immatriculation }}</td>
+                <td>{{ entretien.date }}</td>
+                <td>{{ entretien.type }}</td>
+                <td>{{ entretien.cout }} €</td>
+                <td>
+                    <a href="{% url 'camions:entretien_delete' pk=entretien.pk %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i> Supprimer
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">Aucun entretien enregistré.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

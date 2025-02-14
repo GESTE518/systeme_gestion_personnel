@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h1 class="mb-0 text-center">
+            {% if form.instance.pk %}
+              Modifier un Camion
+            {% else %}
+              Ajouter un Camion
+            {% endif %}
+          </h1>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="id_immatriculation" class="form-label">Immatriculation</label>
+              {% render_field form.immatriculation class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="id_marque" class="form-label">Marque</label>
+              {% render_field form.marque class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="id_modele" class="form-label">Modèle</label>
+              {% render_field form.modele class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="id_capacite" class="form-label">Capacité (L)</label>
+              {% render_field form.capacite class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="id_etat" class="form-label">État</label>
+              {% render_field form.etat class="form-control" %}
+            </div>
+            <!-- Champ date pour l'assurance -->
+            <div class="mb-3">
+              <label for="id_assurance" class="form-label">Assurance</label>
+              {% render_field form.assurance class="form-control" type="date" placeholder="yyyy-mm-dd" %}
+            </div>
+            <!-- Champ date pour le contrôle technique -->
+            <div class="mb-3">
+              <label for="id_controle_technique" class="form-label">Contrôle Technique</label>
+              {% render_field form.controle_technique class="form-control" type="date" placeholder="yyyy-mm-dd" %}
+            </div>
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

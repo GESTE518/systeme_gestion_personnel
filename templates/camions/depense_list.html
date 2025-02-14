@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center text-primary mb-4">💰 Liste des Dépenses</h1>
+
+    <!-- Bouton Ajouter une Dépense -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'camions:depense_create' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Ajouter une Dépense
+        </a>
+    </div>
+
+    <!-- Table des Dépenses -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Type</th>
+                    <th>Chauffeur</th>
+                    <th>Camion</th>
+                    <th>Montant (€)</th>
+                    <th>Date</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for depense in depenses %}
+                <tr>
+                    <td>{{ depense.type }}</td>
+                    <td>{{ depense.chauffeur }}</td>
+                    <td>{{ depense.camion }}</td>
+                    <td class="text-end">{{ depense.montant|floatformat:2 }} €</td>
+                    <td>{{ depense.date }}</td>
+                    <td class="text-center">
+                        <!-- Bouton Modifier -->
+                        <a href="{% url 'camions:depense_update' depense.pk %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <!-- Bouton Supprimer -->
+                        <form action="{% url 'camions:depense_delete' depense.pk %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer cette dépense ?');">
+                                <i class="fas fa-trash-alt"></i> Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">Aucune dépense enregistrée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

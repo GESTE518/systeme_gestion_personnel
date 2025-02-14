@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil - Système de Gestion du Personnel{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <!-- En-tête principale -->
+  <div class="p-5 mb-4 bg-light rounded-3 shadow">
+    <div class="container-fluid py-5">
+      <h1 class="display-4 text-primary text-center">
+        Bienvenue sur le Système de Gestion du Personnel
+      </h1>
+      <p class="lead text-center">
+        Gérez facilement les camions, le cahier de registre, les employés et bien plus encore.
+      </p>
+    </div>
+  </div>
+
+  <!-- Cartes de fonctionnalités -->
+  <div class="row text-center">
+    <!-- Carte Camions -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <i class="fas fa-truck fa-3x text-secondary mb-3"></i>
+          <h4 class="card-title">Camions</h4>
+          <p class="card-text">Suivez et administrez l'ensemble de vos véhicules.</p>
+          <a href="{% url 'camions:camion_list' %}" class="btn btn-primary">
+            Voir les camions
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Cahier de registre -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <i class="fas fa-book fa-3x text-secondary mb-3"></i>
+          <h4 class="card-title">Cahier de registre</h4>
+          <p class="card-text">
+            Consultez et gérez les opérations journalières dans le cahier de registre.
+          </p>
+          <a href="{% url 'cahier_clients:index' %}" class="btn btn-primary">
+            Voir le cahier de registre
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Employés -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <i class="fas fa-users fa-3x text-secondary mb-3"></i>
+          <h4 class="card-title">Employés</h4>
+          <p class="card-text">Administrez votre personnel en toute simplicité.</p>
+          <a href="{% url 'employes:employe_list' %}" class="btn btn-primary">
+            Voir les employés
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

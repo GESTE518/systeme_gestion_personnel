@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center text-primary">📊 Rapport Global</h1>
+
+    <!-- Carte des statistiques générales -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm text-center">
+                <h4>Total Avances</h4>
+                <p class="text-success font-weight-bold">{{ total_avances }} Ar</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm text-center">
+                <h4>Total Biens Apportés</h4>
+                <p class="text-danger font-weight-bold">{{ total_biens }} Ar</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm text-center">
+                <h4>Solde Global</h4>
+                <p class="{% if solde_global < 0 %}text-danger{% else %}text-success{% endif %} font-weight-bold">
+                    {{ solde_global }} Ar
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analyse avancée -->
+    <div class="mt-5">
+        <h3>📈 Analyse avancée</h3>
+        <ul class="list-group">
+            <li class="list-group-item">💰 Moyenne des avances par employé : <strong>{{ total_avances|floatformat:2 }} Ar</strong></li>
+            <li class="list-group-item">📦 Moyenne des biens apportés par employé : <strong>{{ total_biens|floatformat:2 }} Ar</strong></li>
+            <li class="list-group-item">📊 Employé le plus endetté : <strong>{{ employe_plus_endette }}</strong> (<span class="text-danger">{{ max_dette }} Ar</span>)</li>
+            <li class="list-group-item">💸 Employé avec le plus grand crédit : <strong>{{ employe_plus_credit }}</strong> (<span class="text-success">{{ max_credit }} Ar</span>)</li>
+        </ul>
+    </div>
+
+    <!-- Tableau des employés -->
+    <h3 class="mt-4">Détails par Employé</h3>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Employé</th>
+                <th>Total Avances</th>
+                <th>Total Biens</th>
+                <th>Solde</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cahier in cahiers %}
+            <tr>
+                <td>{{ cahier.employe }}</td>
+                <td class="text-success">{{ cahier.total_avances }} Ar</td>
+                <td class="text-danger">{{ cahier.total_biens }} Ar</td>
+                <td class="{% if cahier.solde < 0 %}text-danger{% else %}text-success{% endif %}">{{ cahier.solde }} Ar</td>
+                <td>{{ cahier.statut_solde }}</td>
+                <td>
+                    <a href="{% url 'cahier_clients:rapport_cahier' cahier.id %}" class="btn btn-info btn-sm">Voir Détails</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Aucun cahier trouvé.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Graphique -->
+    <div class="mt-5 text-center">
+        <h3>📊 Répartition des finances</h3>
+        <div style="max-width: 400px; margin: auto;">
+            <canvas id="chartRepartition" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- Intégration de Chart.js pour le graphique -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById('chartRepartition').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Total Avances', 'Total Biens'],
+            datasets: [{
+                label: 'Répartition des finances',
+                data: [{{ total_avances }}, {{ total_biens }}],
+                backgroundColor: ['#28a745', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: false,  // Désactive le redimensionnement automatique
+            maintainAspectRatio: false  // Permet de mieux contrôler la taille
+        }
+    });
+});
+</script>
+{% endblock %}

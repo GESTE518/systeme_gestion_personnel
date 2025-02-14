@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-primary">{{ employe.nom }} {{ employe.prenom }}</h1>
+        <div class="list-group">
+            <p class="list-group-item">Contact: <strong>{{ employe.contact }}</strong></p>
+            <p class="list-group-item">Rôle: <strong>{{ employe.role }}</strong></p>
+            <p class="list-group-item">Salaire: <strong>{{ employe.salaire|floatformat:2 }} €</strong></p>
+        </div>
+
+        <div class="d-flex mt-3">
+            <a href="{% url 'employes:employe_edit' pk=employe.pk %}" class="btn btn-warning me-2">Modifier</a>
+            <a href="{% url 'employes:employe_list' %}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+{% endblock %}

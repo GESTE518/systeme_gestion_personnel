@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Modification du Cahier{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Modifier le Cahier : {{ cahier.nom }}</h1>
+    <hr>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      
+      {# Affichage du formulaire, chaque champ sera enveloppé dans un paragraphe #}
+      {{ form.as_p }}
+      
+      <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    </form>
+    
+    {# Optionnel : affichage des erreurs non liées au formulaire #}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger mt-3">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

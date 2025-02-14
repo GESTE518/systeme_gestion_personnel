@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center text-primary mb-4">Détails du Trajet</h1>
+
+    <div class="card shadow p-4">
+        <h4 class="text-secondary">Informations du Trajet</h4>
+        <hr>
+        <p><strong>Camion :</strong> {{ trajet.camion.immatriculation }}</p>
+        <p><strong>Départ :</strong> {{ trajet.lieu_depart }}</p>
+        <p><strong>Destination :</strong> {{ trajet.lieu_arrivee }}</p>
+        <p><strong>Date de départ :</strong> {{ trajet.date_depart }}</p>
+        <p><strong>Date d'arrivée :</strong> {{ trajet.date_arrivee }}</p>
+        <p><strong>Distance :</strong> {{ trajet.distance }} km</p>
+        <p><strong>Chauffeur :</strong> {{ trajet.chauffeur.nom }} {{ trajet.chauffeur.prenom }}</p>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'camions:trajet_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <a href="{% url 'camions:trajet_edit' pk=trajet.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{% url 'camions:trajet_delete' pk=trajet.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Supprimer
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

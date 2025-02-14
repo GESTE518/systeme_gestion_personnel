@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}  {# Charger le filtre add_class #}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center text-primary mb-4">
+            {% if form.instance.pk %}
+                Modifier une Avance d'Argent
+            {% else %}
+                Ajouter une Avance d'Argent
+            {% endif %}
+        </h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="id_montant" class="form-label">Montant</label>
+                        {{ form.montant|add_class:"form-control" }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_date" class="form-label">Date</label>
+                        {{ form.date|add_class:"form-control" }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_statut" class="form-label">Statut</label>
+                        {{ form.statut|add_class:"form-control" }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_pdf" class="form-label">PDF (facultatif)</label>
+                        {{ form.pdf|add_class:"form-control" }}
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mt-3">
+                        Enregistrer
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'cahier_clients:cahier_detail' pk=cahier.pk %}" class="btn btn-outline-primary">
+                Retour aux Détails
+            </a>
+        </div>
+    </div>
+{% endblock %}

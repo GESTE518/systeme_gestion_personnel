@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center text-primary mb-4">Liste des Revenus</h1>
+
+    <!-- Bouton Ajouter un revenu -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'camions:revenu_create' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Ajouter un Revenu
+        </a>
+    </div>
+
+    <!-- Tableau des revenus -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for revenu in revenus %}
+                <tr>
+                    <td>{{ revenu.description }}</td>
+                    <td>{{ revenu.montant }} €</td>
+                    <td>{{ revenu.date }}</td>
+                    <td>
+                        <form action="{% url 'camions:revenu_delete' revenu.pk %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" title="Supprimer">
+                                <i class="fas fa-trash-alt"></i> Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

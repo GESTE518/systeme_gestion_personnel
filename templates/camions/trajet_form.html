@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Carte contenant le formulaire -->
+      <div class="card shadow-lg">
+        <!-- En-tête de la carte -->
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="mb-0">
+            {% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} un Trajet
+          </h2>
+        </div>
+        <!-- Corps de la carte -->
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+              {% render_field form.date class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.heure.id_for_label }}" class="form-label">Heure</label>
+              {% render_field form.heure class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.distance.id_for_label }}" class="form-label">Distance</label>
+              {% render_field form.distance class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.destination.id_for_label }}" class="form-label">Destination</label>
+              {% render_field form.destination class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.chauffeur.id_for_label }}" class="form-label">Chauffeur</label>
+              {% render_field form.chauffeur class="form-control" %}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.camion.id_for_label }}" class="form-label">Camion</label>
+              {% render_field form.camion class="form-control" %}
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-success">
+                {% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

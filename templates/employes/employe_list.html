@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Liste des Employés</h1>
+        
+        <!-- Bouton Ajouter un employé -->
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'employes:employe_create' %}" class="btn btn-success">
+                <i class="fas fa-user-plus"></i> Ajouter un employé
+            </a>
+        </div>
+
+        <!-- Tableau des employés -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nom et Prénom</th>
+                    <th scope="col">Rôle</th>
+                    <th scope="col" style="text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employe in employes %}
+                    <tr>
+                        <td>{{ employe.nom }} {{ employe.prenom }}</td>
+                        <td>{{ employe.role }}</td>
+                        <td style="text-align: center;">
+                            <!-- Bouton Modifier -->
+                            <a href="{% url 'employes:employe_edit' pk=employe.pk %}" class="btn btn-warning btn-sm mx-1" data-toggle="tooltip" title="Modifier">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <!-- Bouton Supprimer -->
+                            <a href="{% url 'employes:employe_delete' pk=employe.pk %}" class="btn btn-danger btn-sm mx-1" data-toggle="tooltip" title="Supprimer">
+                                <i class="fas fa-trash-alt"></i> Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Ajouter le script pour activer les tooltips (si nécessaire) -->
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}

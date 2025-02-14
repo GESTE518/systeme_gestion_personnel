@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center text-primary mb-4">Cahier de {{ cahier.employe.nom }} {{ cahier.employe.prenom }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <p><strong>Total des Biens :</strong> {{ cahier.total_biens }} Ar</p>
+                <p><strong>Total des Avances :</strong> {{ cahier.total_avances }} Ar</p>
+                <p><strong>Solde :</strong> {{ cahier.solde }} Ar</p>
+                <p><strong>Statut :</strong> {{ cahier.statut_solde }}</p>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h3>Avances d'Argent</h3>
+            <ul class="list-group">
+                {% for avance in cahier.avanceargent_set.all %}
+                    <li class="list-group-item">
+                        {{ avance.montant }} Ar - {{ avance.date }} - {{ avance.statut }}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Aucune avance d'argent enregistrée.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mb-4">
+            <h3>Échanges de Biens</h3>
+            <ul class="list-group">
+                {% for echange in cahier.echangebiens_set.all %}
+                    <li class="list-group-item">
+                        {{ echange.nom_bien }} - {{ echange.prix }} Ar - {{ echange.date }} - {{ echange.statut }}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Aucun échange de biens enregistré.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'cahier_clients:avance_argent_create' cahier.pk %}" class="btn btn-success">Ajouter une Avance d'Argent</a>
+            <a href="{% url 'cahier_clients:echange_biens_create' cahier.pk %}" class="btn btn-warning">Ajouter un Échange de Bien</a>
+        </div>
+    </div>
+{% endblock %}

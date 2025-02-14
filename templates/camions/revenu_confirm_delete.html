@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Supprimer le Revenu</h2>
+<p>Êtes-vous sûr de vouloir supprimer le revenu : "{{ revenu.description }}" de {{ revenu.montant }} € ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Oui, Supprimer</button>
+</form>
+
+<a href="{% url 'camions:revenu_list' %}">Annuler</a>
+{% endblock %}
